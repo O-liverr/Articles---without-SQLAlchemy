@@ -7,6 +7,7 @@ from scripts.setup_db import setup_database
 def setup_database():
     setup_database()
     seed_database()
+    yield
 
 def test_magazine_initialization(setup_database):
     magazine = Magazine("Test Mag", "Test Category")

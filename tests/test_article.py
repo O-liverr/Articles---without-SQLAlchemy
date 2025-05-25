@@ -9,6 +9,7 @@ from scripts.setup_db import setup_database
 def setup_database():
     setup_database()
     seed_database()
+    yield
 
 def test_article_initialization(setup_database):
     author = Author.find_by_name("John Doe")
