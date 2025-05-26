@@ -7,12 +7,7 @@ from scripts.setup_db import setup_database
 def setup_database():
     setup_database()
     seed_database()
-    yield  # Allow tests to run, then clean up if needed
-    # Optional cleanup (e.g., drop tables or reset database)
-    # conn = get_connection()
-    # conn.execute("DELETE FROM articles; DELETE FROM authors; DELETE FROM magazines;")
-    # conn.commit()
-    # conn.close()
+    yield
 
 def test_author_initialization(setup_database):
     author = Author("Test Author")
