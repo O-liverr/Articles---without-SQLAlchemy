@@ -1,35 +1,26 @@
-from lib.db.connection import get_connection
+from lib.models.author import Author
+from lib.models.magazine import Magazine
 
 def run_example_queries():
-    conn = get_connection()
-    cursor = conn.cursor()
-    try:
-        print("Magazines with at least 2 different authors:")
-        cursor.execute("""
-            SELECT m.name, COUNT(DISTINCT a.author_id) as author_count
-            FROM magazines m
-            JOIN articles a ON m.id = a.magazine_id
-            GROUP BY m.id
-            HAVING author_count >= 2
-        """)
-        for row in cursor.fetchall():
-            print(f"{row['name']}: {row['author_count']} authors")
+    author = Author.find_by_name("Jane Doe")
+    if author:
+        print(f"Articles by {author.name}:")
+        for article in author.articles():
+            print(f"- {article.title}")
         
-        print("\nAuthor with most articles:")
-        cursor.execute("""
-            SELECT a.name, COUNT(art.id) as article_count
-            FROM authors a
-            JOIN articles art ON a.id = art.author_id
-            GROUP BY a.id
-            ORDER BY article_count DESC
-            LIMIT 1
-        """)
-        row = cursor.fetchone()
-        print(f"{row['name']}: {row['article_count']} articles")
-    except Exception as e:
-        print(f"Query failed: {e}")
-    finally:
-        conn.close()
+        print(f"\nMagazines contributed to by {author.name}:")
+        for mag in author.magazines():
+            print(f"- {mag.name} ({mag.category})")
+    
+    magazine = Magazine.find_by_name("Tech Weekly")
+    if magazine:
+        print(f"\nArticles in {magazine.name}:")
+        for title in magazine.article_titles():
+            print(f"- {title}")
+        
+        print(f"\nContributors to {magazine.name}:")
+        for contributor in magazine.contributors():
+            print(f"- {contributor.name}")
 
 if __name__ == "__main__":
     run_example_queries()
